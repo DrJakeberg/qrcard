@@ -1,6 +1,3 @@
-@Tags(['preview'])
-library;
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -11,8 +8,14 @@ import 'package:qrcard/screens/card_screen.dart';
 import 'package:qrcard/screens/qr_fullscreen.dart';
 import 'package:qrcard/services/card_storage.dart';
 
-/// Erzeugt Vorschaubilder der Visitenkarte (nur fuer die Dokumentation).
-/// Aufruf: flutter test --update-goldens test/preview_generator_test.dart
+/// Erzeugt die Vorschaubilder in docs/ (nur fuer die Dokumentation).
+///
+/// Liegt bewusst ausserhalb von test/, damit `flutter test` es nicht mitlaeuft:
+/// Die Bilder haengen von den lokal installierten Schriften ab und wuerden auf
+/// einem anderen Rechner oder auf dem CI-Runner abweichen.
+///
+/// Aufruf:
+///   flutter test tool/generate_previews_test.dart --update-goldens
 const ContactCard _demo = ContactCard(
   firstName: 'Jake',
   lastName: 'Berg',

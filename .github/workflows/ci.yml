@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  # Auf die Version festgelegt, mit der die App entwickelt wurde.
+  # Zum Aktualisieren hier die neue Stable-Version eintragen.
+  FLUTTER_VERSION: 3.47.4
+
+jobs:
+  test:
+    name: Analyse und Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: dart format --output=none --set-exit-if-changed lib test tool
+      - run: flutter analyze
+      - run: flutter test
+
+  android:
+    name: Android-APK bauen
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter build apk --release
+      # Die fertige APK laesst sich unter "Artifacts" herunterladen und direkt
+      # auf einem Android-Telefon installieren.
+      - uses: actions/upload-artifact@v4
+        with:
+          name: visitenkarte-android-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
+
+  ios:
+    name: iOS-Build pruefen
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      # Ohne Signatur: prueft, dass der iOS-Build durchlaeuft. Eine installierbare
+      # .ipa braucht ein Apple-Developer-Zertifikat.
+      - run: flutter build ios --release --no-codesign

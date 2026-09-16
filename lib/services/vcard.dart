@@ -27,8 +27,9 @@ String buildVCard(ContactCard card) {
   if (card.email.isNotEmpty) {
     lines.add('EMAIL;TYPE=PREF,INTERNET:${_esc(card.email)}');
   }
-  if (card.website.isNotEmpty)
+  if (card.website.isNotEmpty) {
     lines.add('URL:${_esc(_withScheme(card.website))}');
+  }
 
   // ADR: Postfach;Zusatz;Strasse;Ort;Region;PLZ;Land
   final hasAddress = [
