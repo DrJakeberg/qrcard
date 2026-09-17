@@ -6,6 +6,7 @@ import 'l10n/locale_fallback.dart';
 import 'models/card_profile.dart';
 import 'screens/card_screen.dart';
 import 'services/card_storage.dart';
+import 'services/widget_bridge.dart';
 import 'theme.dart';
 
 void main() {
@@ -39,12 +40,15 @@ class _QrCardAppState extends State<QrCardApp> {
       _profiles = profiles;
       _loading = false;
     });
+    // Widget und NFC-Uebertragung auf den aktuellen Stand bringen.
+    await WidgetBridge.update(profiles.active);
   }
 
   Future<void> _updateProfiles(ProfileSet profiles) async {
     setState(() => _profiles = profiles);
     await _storage.save(profiles);
     await _storage.removeOrphanedPhotos(profiles);
+    await WidgetBridge.update(profiles.active);
   }
 
   @override

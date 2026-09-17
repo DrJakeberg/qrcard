@@ -12,7 +12,9 @@ import 'package:qrcard/screens/card_screen.dart';
 import 'package:qrcard/screens/profiles_screen.dart';
 import 'package:qrcard/screens/qr_fullscreen.dart';
 import 'package:qrcard/screens/style_editor.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:qrcard/services/card_storage.dart';
+import 'package:qrcard/services/vcard.dart';
 import 'package:qrcard/theme.dart';
 
 /// Erzeugt die Vorschaubilder in docs/ (nur fuer die Dokumentation).
@@ -222,6 +224,51 @@ void main() {
     await expectLater(
       find.byType(StyleEditorScreen),
       matchesGoldenFile('../docs/screenshot_colors.png'),
+    );
+  });
+
+  testWidgets('Vorschau des Homescreen-Widgets', (tester) async {
+    await _loadRealFonts();
+    tester.view.devicePixelRatio = 1.0;
+    tester.view.physicalSize = const Size(320, 400);
+    addTearDown(tester.view.reset);
+
+    // Genau die Darstellung, die auch WidgetBridge.renderQrPng erzeugt:
+    // schwarz auf weiss mit ruhiger Zone rundum.
+    await tester.pumpWidget(
+      Directionality(
+        textDirection: TextDirection.ltr,
+        child: Center(
+          child: Container(
+            width: 300,
+            height: 300,
+            color: const Color(0xFFFFFFFF),
+            padding: const EdgeInsets.all(18),
+            child: CustomPaint(
+              painter: QrPainter(
+                data: buildVCard(_demo),
+                version: QrVersions.auto,
+                errorCorrectionLevel: QrErrorCorrectLevel.M,
+                gapless: true,
+                eyeStyle: const QrEyeStyle(
+                  eyeShape: QrEyeShape.square,
+                  color: Color(0xFF000000),
+                ),
+                dataModuleStyle: const QrDataModuleStyle(
+                  dataModuleShape: QrDataModuleShape.square,
+                  color: Color(0xFF000000),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await expectLater(
+      find.byType(CustomPaint).last,
+      matchesGoldenFile('../docs/widget_qr.png'),
     );
   });
 }

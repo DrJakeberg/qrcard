@@ -40,6 +40,12 @@ Alles bleibt auf dem Gerät. Kein Server, kein Account, keine Netzwerkberechtigu
   damit das Gegenüber ihn auch über den Tisch hinweg scannen kann.
 - **Tippen und Halten** – ein Tipp auf Telefon/E-Mail/Web startet Anruf, Mail
   oder Browser, langes Drücken kopiert den Wert in die Zwischenablage.
+- **Homescreen-Widget (Android)** – der QR-Code direkt auf dem Startbildschirm.
+- **Übertragung per Antippen (Android)** – das Telefon gibt sich als NFC-Tag
+  aus, ein anderes Gerät liest die Karte ohne Scannen.
+
+Details und die Plattformgrenzen bei iOS stehen in
+[`docs/widget-und-nfc.md`](docs/widget-und-nfc.md).
 
 Der QR-Code bleibt bewusst immer schwarz auf weiß – auch bei einer dunklen
 Karte und im Dunkelmodus –, weil Scanner darauf ausgelegt sind. Das Foto wird
@@ -116,6 +122,7 @@ lib/
   services/
     vcard.dart                  Erzeugt den vCard-Text für den QR-Code
     card_storage.dart           Lokales Speichern (Texte, Farben, Fotos)
+    widget_bridge.dart          Versorgt Widget und NFC mit QR-Bild und vCard
   screens/
     card_screen.dart            Die Visitenkarte (eine Seite, kein Scrollen)
     edit_screen.dart            Eingabemaske
@@ -123,6 +130,7 @@ lib/
     style_editor.dart           Farbauswahl mit Vorschau
     qr_fullscreen.dart          QR-Code formatfüllend
   widgets/qr_panel.dart         QR-Code auf weißem Grund
+android/app/src/main/kotlin/…   Widget-Anbieter und NFC-Dienst (Kotlin)
 assets/icon/                    Quellgrafik für das App-Icon
 tool/                           Erzeugt die Screenshots in docs/
 ```
