@@ -3,10 +3,17 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:qrcard/l10n/app_localizations.dart';
+import 'package:qrcard/models/card_profile.dart';
+import 'package:qrcard/models/card_style.dart';
 import 'package:qrcard/models/contact_card.dart';
 import 'package:qrcard/screens/card_screen.dart';
+import 'package:qrcard/screens/profiles_screen.dart';
 import 'package:qrcard/screens/qr_fullscreen.dart';
+import 'package:qrcard/screens/style_editor.dart';
 import 'package:qrcard/services/card_storage.dart';
+import 'package:qrcard/theme.dart';
 
 /// Erzeugt die Vorschaubilder in docs/ (nur fuer die Dokumentation).
 ///
@@ -50,6 +57,43 @@ Future<void> _loadRealFonts() async {
   );
 }
 
+const ContactCard _privateCard = ContactCard(
+  firstName: 'Jake',
+  lastName: 'Berg',
+  jobTitle: 'Fotografie',
+  company: 'Berg Bildwerk',
+  city: 'Stuttgart',
+  country: 'Deutschland',
+  mobile: '+49 170 9876543',
+  email: 'hallo@bergbildwerk.de',
+  website: 'bergbildwerk.de',
+);
+
+final ProfileSet _twoProfiles = ProfileSet(
+  profiles: const [
+    CardProfile(
+      id: 'demo',
+      name: 'Firma',
+      card: _demo,
+      style: CardStyle.marine,
+    ),
+    CardProfile(
+      id: 'privat',
+      name: 'Privat',
+      card: _privateCard,
+      style: CardStyle.sand,
+    ),
+  ],
+  activeId: 'demo',
+);
+
+final ProfileSet _demoSet = ProfileSet(
+  profiles: const [
+    CardProfile(id: 'demo', name: '', card: _demo, style: CardStyle.marine),
+  ],
+  activeId: 'demo',
+);
+
 void main() {
   testWidgets('Vorschau der Visitenkarte', (tester) async {
     await _loadRealFonts();
@@ -59,10 +103,18 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
+        locale: const Locale('de'),
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: AppLocalizations.supportedLocales,
         home: CardScreen(
-          card: _demo,
+          profiles: _demoSet,
           storage: CardStorage(),
-          onCardChanged: (_) {},
+          onProfilesChanged: (_) {},
         ),
       ),
     );
@@ -90,10 +142,18 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
+        locale: const Locale('de'),
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: AppLocalizations.supportedLocales,
         home: CardScreen(
-          card: _demo,
+          profiles: _demoSet,
           storage: CardStorage(),
-          onCardChanged: (_) {},
+          onProfilesChanged: (_) {},
         ),
       ),
     );
@@ -104,4 +164,81 @@ void main() {
       matchesGoldenFile('../docs/screenshot_landscape.png'),
     );
   });
+
+  testWidgets('Vorschau der hellen Farbvorlage', (tester) async {
+    await _loadRealFonts();
+    tester.view.devicePixelRatio = 3.0;
+    tester.view.physicalSize = const Size(393, 852) * 3.0;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(
+      _app(
+        CardScreen(
+          profiles: ProfileSet(
+            profiles: [_twoProfiles.profiles[1]],
+            activeId: 'privat',
+          ),
+          storage: CardStorage(),
+          onProfilesChanged: (_) {},
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await expectLater(
+      find.byType(CardScreen),
+      matchesGoldenFile('../docs/screenshot_light.png'),
+    );
+  });
+
+  testWidgets('Vorschau der Profilliste', (tester) async {
+    await _loadRealFonts();
+    tester.view.devicePixelRatio = 3.0;
+    tester.view.physicalSize = const Size(393, 852) * 3.0;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(
+      _app(ProfilesScreen(profiles: _twoProfiles, storage: CardStorage())),
+    );
+    await tester.pumpAndSettle();
+
+    await expectLater(
+      find.byType(ProfilesScreen),
+      matchesGoldenFile('../docs/screenshot_profiles.png'),
+    );
+  });
+
+  testWidgets('Vorschau des Farbeditors', (tester) async {
+    await _loadRealFonts();
+    tester.view.devicePixelRatio = 3.0;
+    tester.view.physicalSize = const Size(393, 852) * 3.0;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(
+      _app(const StyleEditorScreen(style: CardStyle.bordeaux)),
+    );
+    await tester.pumpAndSettle();
+
+    await expectLater(
+      find.byType(StyleEditorScreen),
+      matchesGoldenFile('../docs/screenshot_colors.png'),
+    );
+  });
+}
+
+/// Rahmen mit deutscher Sprache fuer alle Vorschaubilder.
+Widget _app(Widget home) {
+  return MaterialApp(
+    debugShowCheckedModeBanner: false,
+    locale: const Locale('de'),
+    localizationsDelegates: const [
+      AppLocalizations.delegate,
+      GlobalMaterialLocalizations.delegate,
+      GlobalWidgetsLocalizations.delegate,
+      GlobalCupertinoLocalizations.delegate,
+    ],
+    supportedLocales: AppLocalizations.supportedLocales,
+    theme: buildAppTheme(Brightness.light),
+    home: home,
+  );
 }

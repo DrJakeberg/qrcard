@@ -1,0 +1,93 @@
+{
+  "@@locale": "en",
+  "appTitle": "Business Card",
+  "cancel": "Cancel",
+  "save": "Save",
+  "delete": "Delete",
+  "done": "Done",
+  "reset": "Reset",
+  "editCard": "Edit business card",
+  "scanHint": "Tap to enlarge",
+  "addContactData": "Add contact details",
+  "copiedToClipboard": "{label} copied",
+  "@copiedToClipboard": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "couldNotOpen": "Could not be opened.",
+  "labelAddress": "Address",
+  "labelPhone": "Phone",
+  "labelMobile": "Mobile",
+  "labelEmail": "Email",
+  "labelWeb": "Web",
+  "qrScreenTitle": "Ready to scan",
+  "qrScreenHint": "Scan with the camera – the contact can be saved straight away.",
+  "sectionPerson": "Person",
+  "sectionCompany": "Company",
+  "sectionContact": "Contact",
+  "fieldFirstName": "First name",
+  "fieldLastName": "Last name",
+  "fieldJobTitle": "Position / title",
+  "hintJobTitle": "e.g. Managing Director",
+  "fieldCompany": "Company name",
+  "fieldStreet": "Street and number",
+  "fieldPostalCode": "Postcode",
+  "fieldCity": "City",
+  "fieldCountry": "Country",
+  "fieldPhoneWork": "Phone (work)",
+  "fieldMobile": "Mobile",
+  "fieldEmail": "Email",
+  "fieldWebsite": "Website",
+  "hintWebsite": "e.g. company.com",
+  "invalidEmail": "Please enter a valid email address",
+  "privacyNote": "Everything stays on this device. The app never sends anything to a server.",
+  "photoAdd": "Add photo",
+  "photoChange": "Change photo",
+  "photoFromGallery": "Choose from gallery",
+  "photoFromCamera": "Take a photo",
+  "photoRemove": "Remove photo",
+  "photoError": "Could not load the photo: {error}",
+  "@photoError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "profiles": "Profiles",
+  "profileName": "Profile name",
+  "hintProfileName": "e.g. Work or Personal",
+  "newProfile": "New profile",
+  "duplicateProfile": "Duplicate profile",
+  "deleteProfile": "Delete profile",
+  "deleteProfileQuestion": "Really delete the profile “{name}”?",
+  "@deleteProfileQuestion": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "lastProfileHint": "The last remaining profile cannot be deleted.",
+  "switchProfile": "Switch profile",
+  "untitledProfile": "Untitled",
+  "appearance": "Appearance",
+  "colorPresets": "Colour presets",
+  "colorCustom": "Custom colour",
+  "colorBackgroundTop": "Background top",
+  "colorBackgroundBottom": "Background bottom",
+  "colorText": "Text",
+  "colorAccent": "Accent",
+  "contrastWarning": "Text and background are too similar – the card will be hard to read.",
+  "qrStaysWhite": "The QR code always stays black on white so every scanner reads it reliably.",
+  "preview": "Preview",
+  "presetMarine": "Marine",
+  "presetGraphite": "Graphite",
+  "presetBordeaux": "Bordeaux",
+  "presetForest": "Forest",
+  "presetSand": "Sand",
+  "presetPaper": "Paper"
+}

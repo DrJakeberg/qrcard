@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'models/contact_card.dart';
+import 'l10n/app_localizations.dart';
+import 'l10n/locale_fallback.dart';
+import 'models/card_profile.dart';
 import 'screens/card_screen.dart';
 import 'services/card_storage.dart';
 import 'theme.dart';
@@ -21,7 +23,7 @@ class QrCardApp extends StatefulWidget {
 class _QrCardAppState extends State<QrCardApp> {
   final CardStorage _storage = CardStorage();
 
-  ContactCard _card = const ContactCard();
+  ProfileSet _profiles = ProfileSet.initial();
   bool _loading = true;
 
   @override
@@ -31,36 +33,46 @@ class _QrCardAppState extends State<QrCardApp> {
   }
 
   Future<void> _load() async {
-    final card = await _storage.load();
+    final profiles = await _storage.load();
     if (!mounted) return;
     setState(() {
-      _card = card;
+      _profiles = profiles;
       _loading = false;
     });
   }
 
-  Future<void> _updateCard(ContactCard card) async {
-    setState(() => _card = card);
-    await _storage.save(card);
+  Future<void> _updateProfiles(ProfileSet profiles) async {
+    setState(() => _profiles = profiles);
+    await _storage.save(profiles);
+    await _storage.removeOrphanedPhotos(profiles);
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Visitenkarte',
+      onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       debugShowCheckedModeBanner: false,
+
+      // Die App folgt der Sprache des Telefons. Fuer alles ausser Deutsch
+      // greift Englisch - das regelt Flutter ueber die Liste unten selbst.
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
+      localeResolutionCallback: resolveLocale,
+
       theme: buildAppTheme(Brightness.light),
       darkTheme: buildAppTheme(Brightness.dark),
-      home: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
-        child: _loading
-            ? const Scaffold(body: Center(child: CircularProgressIndicator()))
-            : CardScreen(
-                card: _card,
-                storage: _storage,
-                onCardChanged: _updateCard,
-              ),
-      ),
+      home: _loading
+          ? const Scaffold(body: Center(child: CircularProgressIndicator()))
+          : CardScreen(
+              profiles: _profiles,
+              storage: _storage,
+              onProfilesChanged: _updateProfiles,
+            ),
     );
   }
 }
