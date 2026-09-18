@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Policy – Business Card</title>
+<meta name="description" content="Privacy policy for the Business Card app. The app collects nothing and sends nothing.">
+<!--
+  Bewusst ohne externe Schriften, Skripte oder Zaehlpixel: Eine Seite, die
+  Datensparsamkeit beschreibt, sollte selbst nichts nachladen.
+-->
+<style>
+  :root {
+    --bg-top: #1f3a5f;
+    --bg-bottom: #0c1a2e;
+    --text: #f2f5f8;
+    --muted: #b7c4d4;
+    --accent: #6fb4f5;
+    --panel: rgba(255, 255, 255, 0.06);
+    --border: rgba(255, 255, 255, 0.14);
+  }
+  * { box-sizing: border-box; }
+  /* Der Verlauf laeuft nach 900px in die dunkle Grundfarbe aus, die zusaetzlich
+     auf <html> liegt. So bleibt auch eine lange Seite durchgehend dunkel -
+     background-attachment: fixed waere hier gescheitert, weil es die Flaeche
+     nur auf Viewport-Hoehe faerbt und auf iOS Safari ohnehin unzuverlaessig ist. */
+  html { background-color: var(--bg-bottom); }
+  body {
+    margin: 0;
+    padding: 0 16px 64px;
+    min-height: 100vh;
+    background-color: var(--bg-bottom);
+    background-image: linear-gradient(180deg, var(--bg-top), var(--bg-bottom) 900px);
+    background-repeat: no-repeat;
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      "Helvetica Neue", Arial, sans-serif;
+    font-size: 17px;
+    line-height: 1.65;
+  }
+  main { max-width: 720px; margin: 0 auto; }
+  header { padding: 56px 0 8px; }
+  h1 { font-size: 1.9rem; line-height: 1.2; margin: 0 0 6px; }
+  h2 {
+    font-size: 1.25rem;
+    margin: 40px 0 10px;
+    padding-top: 22px;
+    border-top: 1px solid var(--border);
+  }
+  h3 { font-size: 1.02rem; margin: 26px 0 6px; color: var(--accent); }
+  p, li { color: var(--muted); }
+  strong { color: var(--text); }
+  a { color: var(--accent); }
+  ul { padding-left: 22px; }
+  li { margin: 6px 0; }
+  .lede { color: var(--text); font-size: 1.08rem; }
+  .updated { color: var(--muted); font-size: 0.86rem; margin: 0; }
+  .switch { margin: 22px 0 0; font-size: 0.92rem; }
+  .switch a { margin-right: 14px; }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin: 22px 0;
+  }
+  .panel p:last-child { margin-bottom: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  th, td {
+    text-align: left;
+    padding: 9px 10px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.95rem;
+    color: var(--muted);
+  }
+  th { color: var(--text); font-weight: 600; }
+  footer {
+    margin-top: 48px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    font-size: 0.86rem;
+    color: var(--muted);
+  }
+  @media (max-width: 480px) { h1 { font-size: 1.55rem; } body { font-size: 16px; } }
+</style>
+</head>
+<body>
+<main>
+
+<header>
+  <h1>Privacy Policy</h1>
+  <p class="updated">Business Card (<code>de.cyb8.qrcode</code>) · last updated 18 September 2026</p>
+  <p class="switch"><a href="#english">English</a><a href="#deutsch">Deutsch</a></p>
+</header>
+
+<section id="english">
+  <p class="lede">The Business Card app does not collect any data, does not
+  transmit anything and has no user accounts. Everything you enter stays on
+  your device.</p>
+
+  <div class="panel">
+    <p><strong>The short version:</strong> the app requests no network
+    permission. It cannot send your data anywhere, because it never opens a
+    network connection at all.</p>
+  </div>
+
+  <h2>What the app stores, and where</h2>
+  <table>
+    <tr><th>Data</th><th>Where it is kept</th></tr>
+    <tr><td>Name, position, company, address, phone, email, website</td><td>Local app storage on your device</td></tr>
+    <tr><td>Your chosen card colours and profile names</td><td>Local app storage on your device</td></tr>
+    <tr><td>Your profile photo</td><td>The app's private folder on your device</td></tr>
+  </table>
+  <p>None of this is sent anywhere, backed up to a server, or shared with us
+  or any third party. We never see it.</p>
+
+  <h2>Permissions</h2>
+  <ul>
+    <li><strong>Photo library / camera</strong> – only used when you choose or
+    take a picture for your card. The image is copied into the app's private
+    folder and used nowhere else.</li>
+    <li><strong>NFC (Android only)</strong> – lets the app hand your card to
+    another device when the two phones touch. The data transmitted is the same
+    contact information shown in the QR code, and it goes only to the device
+    you hold your phone against.</li>
+  </ul>
+  <p>The app requests <strong>no internet permission</strong>. When you tap a
+  phone number, email address or website on your card, your phone's own
+  dialler, mail app or browser opens — the app itself makes no connection.</p>
+
+  <h2>What the app does not do</h2>
+  <ul>
+    <li>No analytics, tracking or usage statistics</li>
+    <li>No advertising and no advertising identifiers</li>
+    <li>No user accounts, no sign-in, no cloud sync</li>
+    <li>No third-party SDKs that collect data</li>
+    <li>No crash reporting to external services</li>
+  </ul>
+
+  <h2>Deleting your data</h2>
+  <p>You can clear individual entries at any time inside the app. Uninstalling
+  the app removes all stored data and the photo from your device. Because
+  nothing was ever transmitted, there is nothing for us to delete on our side.</p>
+
+  <h2>Children</h2>
+  <p>The app is suitable for all ages. Since no data is collected, no data
+  from children is collected either.</p>
+
+  <h2>Changes to this policy</h2>
+  <p>If the app ever gains a feature that handles data differently, this page
+  will be updated before that version is released.</p>
+
+  <h2>Contact</h2>
+  <p>Responsible for this app and this page:</p>
+  <div class="panel">
+    <p><strong>[Name und Anschrift eintragen]</strong><br>
+    Email: <a href="mailto:BITTE-EINTRAGEN@cyb8.de">BITTE-EINTRAGEN@cyb8.de</a></p>
+  </div>
+</section>
+
+<section id="deutsch">
+  <h2>Datenschutzerklärung (Deutsch)</h2>
+
+  <p class="lede">Die App „Visitenkarte“ erhebt keine Daten, überträgt nichts
+  und kennt keine Benutzerkonten. Alles, was du einträgst, bleibt auf deinem
+  Gerät.</p>
+
+  <div class="panel">
+    <p><strong>Kurz gesagt:</strong> Die App fordert keine
+    Netzwerkberechtigung an. Sie kann deine Daten gar nicht weitergeben, weil
+    sie überhaupt keine Netzwerkverbindung aufbaut.</p>
+  </div>
+
+  <h3>Was die App speichert – und wo</h3>
+  <table>
+    <tr><th>Daten</th><th>Speicherort</th></tr>
+    <tr><td>Name, Position, Firma, Anschrift, Telefon, E-Mail, Website</td><td>Lokaler App-Speicher auf deinem Gerät</td></tr>
+    <tr><td>Gewählte Kartenfarben und Profilnamen</td><td>Lokaler App-Speicher auf deinem Gerät</td></tr>
+    <tr><td>Dein Profilfoto</td><td>Privates App-Verzeichnis auf deinem Gerät</td></tr>
+  </table>
+  <p>Nichts davon wird versendet, auf einem Server gesichert oder an uns oder
+  Dritte weitergegeben. Wir bekommen diese Daten nie zu sehen.</p>
+
+  <h3>Berechtigungen</h3>
+  <ul>
+    <li><strong>Fotobibliothek / Kamera</strong> – nur beim Auswählen oder
+    Aufnehmen eines Bildes für die Karte. Das Bild wird in das private
+    App-Verzeichnis kopiert und sonst nirgends verwendet.</li>
+    <li><strong>NFC (nur Android)</strong> – ermöglicht die Übergabe der Karte,
+    wenn du dein Telefon an ein anderes Gerät hältst. Übertragen werden
+    dieselben Kontaktdaten, die auch im QR-Code stehen, und zwar nur an das
+    Gerät, an das du dein Telefon hältst.</li>
+  </ul>
+  <p>Die App fordert <strong>keine Internetberechtigung</strong> an. Tippst du
+  auf der Karte auf eine Telefonnummer, E-Mail-Adresse oder Website, öffnet
+  sich die Telefon-, Mail- oder Browser-App deines Geräts – die App selbst
+  baut keine Verbindung auf.</p>
+
+  <h3>Was die App nicht tut</h3>
+  <ul>
+    <li>Keine Analyse, kein Tracking, keine Nutzungsstatistik</li>
+    <li>Keine Werbung und keine Werbekennungen</li>
+    <li>Keine Benutzerkonten, keine Anmeldung, keine Cloud-Synchronisierung</li>
+    <li>Keine datensammelnden Bibliotheken von Dritten</li>
+    <li>Keine Absturzberichte an externe Dienste</li>
+  </ul>
+
+  <h3>Daten löschen</h3>
+  <p>Einzelne Einträge kannst du jederzeit in der App ändern oder löschen. Beim
+  Deinstallieren werden alle gespeicherten Daten und das Foto vom Gerät
+  entfernt. Da nie etwas übertragen wurde, gibt es bei uns nichts zu löschen.</p>
+
+  <h3>Kinder</h3>
+  <p>Die App ist für jedes Alter geeignet. Da keine Daten erhoben werden,
+  werden auch keine Daten von Kindern erhoben.</p>
+
+  <h3>Änderungen</h3>
+  <p>Sollte die App eine Funktion bekommen, die mit Daten anders umgeht, wird
+  diese Seite aktualisiert, bevor die Version erscheint.</p>
+
+  <h3>Verantwortlich</h3>
+  <div class="panel">
+    <p><strong>[Name und Anschrift eintragen]</strong><br>
+    E-Mail: <a href="mailto:BITTE-EINTRAGEN@cyb8.de">BITTE-EINTRAGEN@cyb8.de</a></p>
+  </div>
+</section>
+
+<footer>
+  <p><a href="index.html">← Business Card</a> · Source:
+  <a href="https://github.com/DrJakeberg/qrcard">github.com/DrJakeberg/qrcard</a></p>
+</footer>
+
+</main>
+</body>
+</html>

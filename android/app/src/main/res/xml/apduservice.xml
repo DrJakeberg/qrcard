@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Meldet unsere Anwendung fuer die standardisierte NDEF-Kennung an. Lesende
+  Geraete sprechen genau diese an, wenn sie einen NFC-Tag erwarten.
+-->
+<host-apdu-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/nfc_service_description"
+    android:requireDeviceUnlock="false"
+    android:apduServiceBanner="@drawable/widget_background">
+    <aid-group
+        android:description="@string/nfc_service_description"
+        android:category="other">
+        <aid-filter android:name="D2760000850101" />
+    </aid-group>
+</host-apdu-service>
