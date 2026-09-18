@@ -104,8 +104,21 @@ Die fertige APK holst du unter **Actions → der jeweilige Lauf → Artifacts �
 Entwicklungsumgebung. Für öffentliche Repositories sind die Runner kostenlos.
 
 Eine direkt installierbare `.ipa` kann der Runner nicht erzeugen – dafür
-müssten Apple-Zertifikat und Provisioning-Profil hinterlegt sein. Wie das mit
-Codemagic geht, steht in [`docs/codemagic.md`](docs/codemagic.md).
+müssten Apple-Zertifikat und Provisioning-Profil hinterlegt sein.
+
+## In die Stores veröffentlichen
+
+`codemagic.yaml` im Wurzelverzeichnis enthält drei fertige Workflows: eine APK
+zum Selbstinstallieren, ein App Bundle für den **Google Play Store** und einen
+TestFlight-Build für den **Apple App Store**. Beide Store-Workflows lösen bei
+einem Git-Tag `v*` aus und zählen die Build-Nummer selbst hoch.
+
+Was drumherum einzurichten ist – Signaturschlüssel, Play-Dienstkonto,
+Apple-API-Key –, steht Schritt für Schritt in
+[`docs/veroeffentlichen.md`](docs/veroeffentlichen.md). Fertige Store-Texte,
+Icon und Feature-Grafik liegen in [`docs/store/`](docs/store/).
+
+Grundlagen zu Codemagic selbst: [`docs/codemagic.md`](docs/codemagic.md).
 
 ## Aufbau
 
