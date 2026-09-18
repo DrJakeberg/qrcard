@@ -94,12 +94,31 @@ keyPassword=DEIN_KEY_PASSWORT
    der Variable `GCLOUD_SERVICE_ACCOUNT_CREDENTIALS` – Inhalt ist die
    komplette JSON-Datei. **Als „secure" markieren.**
 
-### Datenschutzerklärung
+### Datenschutzerklärung und Support-Seite
 
-Beide Stores verlangen eine öffentlich erreichbare URL. Da die App nichts
-erhebt, reichen wenige Sätze. Am einfachsten über GitHub Pages: eine
-`privacy.md` im Repo, Pages aktivieren, URL eintragen. Sag Bescheid, wenn ich
-den Text und die Seite anlegen soll.
+Beide Stores verlangen eine öffentlich erreichbare Datenschutz-URL, Apple
+zusätzlich eine Support-URL. Beides liegt fertig im Repository und wird über
+GitHub Pages ausgeliefert.
+
+**Pages einmalig aktivieren:** Repository → *Settings* → *Pages* → unter
+*Build and deployment* die Quelle auf **Deploy from a branch** stellen, Branch
+`main` und Ordner **`/docs`** wählen, *Save*. Nach ein bis zwei Minuten sind
+die Seiten erreichbar:
+
+| Zweck | URL |
+|---|---|
+| Datenschutzerklärung (Play + App Store) | `https://drjakeberg.github.io/qrcard/privacy.html` |
+| Support-URL (App Store) | `https://drjakeberg.github.io/qrcard/` |
+
+Die Seiten laden bewusst keine externen Schriften, Skripte oder Zählpixel –
+eine Seite über Datensparsamkeit sollte selbst nichts nachladen.
+
+**Vor dem Einreichen ausfüllen:** In `docs/privacy.html` und `docs/index.html`
+stehen jeweils Platzhalter `[Name und Anschrift eintragen]` und
+`BITTE-EINTRAGEN@cyb8.de`. Eine Datenschutzerklärung braucht eine
+verantwortliche Stelle mit Kontakt; ohne die Angaben ist sie unvollständig.
+(Das ist ein Hinweis, keine Rechtsberatung – ob für dich zusätzlich eine
+Impressumspflicht besteht, musst du selbst klären.)
 
 ---
 
@@ -173,6 +192,8 @@ du in der `codemagic.yaml` `submit_as_draft: false` bzw.
 - [ ] Apple Developer Program, Bundle-ID registriert
 - [ ] App in App Store Connect angelegt, App-ID in `codemagic.yaml` eingetragen
 - [ ] `visitenkarte_asc` in Codemagic hinterlegt
-- [ ] Datenschutzerklärung online, URL in beiden Stores eingetragen
+- [ ] GitHub Pages aktiviert (Branch `main`, Ordner `/docs`)
+- [ ] Platzhalter in `docs/privacy.html` und `docs/index.html` ersetzt
+- [ ] Datenschutz-URL in beiden Stores eingetragen, Support-URL bei Apple
 - [ ] Store-Texte und Grafiken aus `docs/store/` eingetragen (Englisch als Hauptsprache)
 - [ ] Mailadresse in `codemagic.yaml` ersetzt

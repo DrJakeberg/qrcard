@@ -122,6 +122,12 @@ Texte innerhalb der Zeichengrenzen, Icon 512×512, Feature-Grafik 1024×500 und
 fünf Screenshots im Format 1080×1920 mit Bildunterschriften. Eine deutsche
 Übersetzung der Texte liegt für eine zweite Store-Sprache bereit.
 
+Datenschutzerklärung und Support-Seite liegen als
+[`docs/privacy.html`](docs/privacy.html) und
+[`docs/index.html`](docs/index.html) bereit und werden über GitHub Pages
+ausgeliefert (Settings → Pages → Branch `main`, Ordner `/docs`). Beide Seiten
+laden bewusst keine externen Schriften, Skripte oder Zählpixel.
+
 Grundlagen zu Codemagic selbst: [`docs/codemagic.md`](docs/codemagic.md).
 
 ## Aufbau
