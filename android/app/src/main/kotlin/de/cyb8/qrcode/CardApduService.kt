@@ -1,4 +1,4 @@
-package de.jakeberg.qrcard
+package de.cyb8.qrcode
 
 import android.nfc.cardemulation.HostApduService
 import android.os.Bundle

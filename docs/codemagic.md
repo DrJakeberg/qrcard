@@ -31,7 +31,7 @@ Diese Werte brauchst du in beiden Wegen:
 
 | Einstellung | Wert |
 |---|---|
-| Bundle ID / Application ID | `de.jakeberg.qrcard` |
+| Bundle ID / Application ID | `de.cyb8.qrcode` |
 | App-Name | Visitenkarte |
 | Version | `1.0.0+1` (in `pubspec.yaml`) |
 | Flutter-Version | `3.47.4` (damit entwickelt und getestet) |
@@ -96,7 +96,7 @@ Codemagic.
 
 3. **Bundle ID registrieren**
    Im Apple Developer Portal unter *Identifiers* eine App-ID für
-   `de.jakeberg.qrcard` anlegen. Muss exakt übereinstimmen, sonst schlägt die
+   `de.cyb8.qrcode` anlegen. Muss exakt übereinstimmen, sonst schlägt die
    Signierung fehl.
 
 4. **Code Signing im Workflow aktivieren**
@@ -174,7 +174,7 @@ workflows:
       flutter: 3.47.4
       ios_signing:
         distribution_type: ad_hoc      # oder app_store
-        bundle_identifier: de.jakeberg.qrcard
+        bundle_identifier: de.cyb8.qrcode
     scripts:
       - flutter pub get
       - flutter test

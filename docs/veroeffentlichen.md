@@ -63,7 +63,7 @@ keyPassword=DEIN_KEY_PASSWORT
 ### In der Play Console
 
 1. **Entwicklerkonto** anlegen (einmalig 25 $).
-2. **App erstellen** mit dem Paketnamen `de.jakeberg.qrcard`. Der Name ist
+2. **App erstellen** mit dem Paketnamen `de.cyb8.qrcode`. Der Name ist
    unveränderlich – später lässt er sich nicht mehr korrigieren.
 3. **Store-Eintrag** füllen. Was Google verlangt:
 
@@ -107,7 +107,7 @@ den Text und die Seite anlegen soll.
 
 1. **Apple Developer Program** (99 $/Jahr).
 2. **Bundle-ID registrieren:** im Developer Portal unter *Identifiers* die ID
-   `de.jakeberg.qrcard` anlegen. Muss exakt stimmen.
+   `de.cyb8.qrcode` anlegen. Muss exakt stimmen.
 3. **App in App Store Connect anlegen**, dieselbe Bundle-ID wählen. Die
    App-ID (die lange Zahl in der URL) in `codemagic.yaml` bei
    `APP_STORE_APPLE_ID` eintragen – dort steht noch `0000000000`.
@@ -167,7 +167,7 @@ du in der `codemagic.yaml` `submit_as_draft: false` bzw.
 
 - [ ] Signaturschlüssel erzeugt und sicher gesichert
 - [ ] `visitenkarte_keystore` in Codemagic hinterlegt
-- [ ] Play-Entwicklerkonto, App mit `de.jakeberg.qrcard` angelegt
+- [ ] Play-Entwicklerkonto, App mit `de.cyb8.qrcode` angelegt
 - [ ] Erste Version einmal manuell in die Play Console geladen
 - [ ] Dienstkonto-JSON als `google_play`-Gruppe in Codemagic
 - [ ] Apple Developer Program, Bundle-ID registriert

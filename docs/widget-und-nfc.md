@@ -23,7 +23,7 @@ Bausteine wie Bild und Text. Deshalb:
    (`lib/services/widget_bridge.dart`) und legt den Dateipfad zusammen mit
    Name und Untertitel ab.
 2. Der Widget-Anbieter in Kotlin
-   (`android/app/src/main/kotlin/de/jakeberg/qrcard/CardWidgetProvider.kt`)
+   (`android/app/src/main/kotlin/de/cyb8/qrcode/CardWidgetProvider.kt`)
    lädt das Bild und zeigt es an.
 
 Das Bild wird nur erzeugt, wenn sich die Karte ändert – öfter ist es nicht

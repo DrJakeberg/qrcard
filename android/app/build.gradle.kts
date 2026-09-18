@@ -34,7 +34,7 @@ val hasReleaseSigning = releaseStoreFile != null &&
     releaseKeyPassword != null
 
 android {
-    namespace = "de.jakeberg.qrcard"
+    namespace = "de.cyb8.qrcode"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -45,7 +45,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "de.jakeberg.qrcard"
+        applicationId = "de.cyb8.qrcode"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion

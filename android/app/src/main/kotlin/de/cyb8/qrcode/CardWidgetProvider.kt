@@ -1,4 +1,4 @@
-package de.jakeberg.qrcard
+package de.cyb8.qrcode
 
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager

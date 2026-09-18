@@ -71,7 +71,7 @@ workflows:
         # Muss GCLOUD_SERVICE_ACCOUNT_CREDENTIALS enthalten (Play-Dienstkonto).
         - google_play
       vars:
-        PACKAGE_NAME: de.jakeberg.qrcard
+        PACKAGE_NAME: de.cyb8.qrcode
     triggering:
       events:
         - tag
@@ -125,9 +125,9 @@ workflows:
       cocoapods: default
       ios_signing:
         distribution_type: app_store
-        bundle_identifier: de.jakeberg.qrcard
+        bundle_identifier: de.cyb8.qrcode
       vars:
-        BUNDLE_ID: de.jakeberg.qrcard
+        BUNDLE_ID: de.cyb8.qrcode
         # App-ID aus App Store Connect (die lange Zahl in der URL).
         APP_STORE_APPLE_ID: 0000000000
     triggering:
