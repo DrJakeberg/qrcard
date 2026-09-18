@@ -23,7 +23,7 @@ einer einzigen Person zeigen (Richtlinie 4.2, „Minimum Functionality"). Diese
 App ist ein allgemeines Werkzeug – jeder trägt seine eigenen Daten ein – und
 das ist zulässig. Wichtig ist, dass die Store-Beschreibung sie auch so
 darstellt: als Visitenkarten-App für alle, nicht als „Jake Bergs Karte".
-Die Texte in [`store/listing-texte.md`](store/listing-texte.md) sind
+Die Texte in [`store/listing-copy.md`](store/listing-copy.md) sind
 entsprechend formuliert.
 
 ---
@@ -71,13 +71,13 @@ keyPassword=DEIN_KEY_PASSWORT
    |---|---|
    | App-Symbol 512×512 | [`store/play_icon_512.png`](store/play_icon_512.png) |
    | Feature-Grafik 1024×500 | [`store/feature_graphic.png`](store/feature_graphic.png) |
-   | Mind. 2 Screenshots | `screenshot_card.png`, `screenshot_qr.png`, `screenshot_light.png`, `screenshot_profiles.png`, `screenshot_colors.png` |
-   | Kurzbeschreibung (80 Zeichen) | [`store/listing-texte.md`](store/listing-texte.md) |
+   | Mind. 2 Screenshots | [`store/screenshots/`](store/screenshots/) – fünf Stück, 1080×1920, mit englischen Bildunterschriften |
+   | Kurzbeschreibung (80 Zeichen) | [`store/listing-copy.md`](store/listing-copy.md) |
    | Vollständige Beschreibung | ebenda |
    | Datenschutzerklärung (URL) | siehe unten |
 
 4. **Datensicherheit** ausfüllen: Es werden keine Daten erhoben, keine geteilt,
-   kein Tracking. Die Tabelle in `store/listing-texte.md` hat die Antworten.
+   kein Tracking. Die Tabelle in `store/listing-copy.md` hat die Antworten.
 5. **Inhaltsbewertung** ausfüllen (Fragebogen, dauert fünf Minuten).
 6. **Erste Version manuell hochladen.** Google verlangt das, bevor die
    automatische Auslieferung per Dienstkonto funktioniert. Danach übernimmt
@@ -119,7 +119,7 @@ den Text und die Seite anlegen soll.
    als **`visitenkarte_asc`** benennen – so heißt der Verweis in der
    `codemagic.yaml`.
 6. **Store-Eintrag** füllen: Untertitel, Werbetext, Beschreibung, Keywords
-   (alles in `store/listing-texte.md`), Screenshots und die
+   (alles in `store/listing-copy.md`), Screenshots und die
    Datenschutz-Angaben („Es werden keine Daten erfasst").
 
 ---
@@ -174,5 +174,5 @@ du in der `codemagic.yaml` `submit_as_draft: false` bzw.
 - [ ] App in App Store Connect angelegt, App-ID in `codemagic.yaml` eingetragen
 - [ ] `visitenkarte_asc` in Codemagic hinterlegt
 - [ ] Datenschutzerklärung online, URL in beiden Stores eingetragen
-- [ ] Store-Texte und Grafiken aus `docs/store/` eingetragen
+- [ ] Store-Texte und Grafiken aus `docs/store/` eingetragen (Englisch als Hauptsprache)
 - [ ] Mailadresse in `codemagic.yaml` ersetzt

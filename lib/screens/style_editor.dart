@@ -194,7 +194,7 @@ class _StylePreview extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Anna Beispiel',
+                  'Alex Morgan',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -204,7 +204,7 @@ class _StylePreview extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'Geschäftsführerin',
+                  'Managing Director',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(color: style.accent, fontSize: 13),
@@ -216,7 +216,7 @@ class _StylePreview extends StatelessWidget {
                     const SizedBox(width: 6),
                     Expanded(
                       child: Text(
-                        'anna@beispiel.de',
+                        'a.morgan@example.com',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(color: style.text, fontSize: 12.5),

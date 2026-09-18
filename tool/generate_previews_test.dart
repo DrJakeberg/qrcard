@@ -26,18 +26,18 @@ import 'package:qrcard/theme.dart';
 /// Aufruf:
 ///   flutter test tool/generate_previews_test.dart --update-goldens
 const ContactCard _demo = ContactCard(
-  firstName: 'Jake',
-  lastName: 'Berg',
-  jobTitle: 'Geschaeftsfuehrer',
-  company: 'Muster Maschinenbau GmbH',
-  street: 'Industriestrasse 14',
-  postalCode: '70173',
-  city: 'Stuttgart',
-  country: 'Deutschland',
-  phone: '+49 711 123456-0',
-  mobile: '+49 170 9876543',
-  email: 'j.berg@muster-maschinenbau.de',
-  website: 'muster-maschinenbau.de',
+  firstName: 'Alex',
+  lastName: 'Morgan',
+  jobTitle: 'Managing Director',
+  company: 'Northfield Engineering Ltd',
+  street: '14 Fairmont Road',
+  postalCode: 'M1 4BT',
+  city: 'Manchester',
+  country: 'United Kingdom',
+  phone: '+44 161 496 0114',
+  mobile: '+44 7700 900123',
+  email: 'a.morgan@northfield-eng.co.uk',
+  website: 'northfield-eng.co.uk',
 );
 
 /// Laedt echte Schriften, damit die Vorschau so aussieht wie auf dem Geraet.
@@ -60,28 +60,23 @@ Future<void> _loadRealFonts() async {
 }
 
 const ContactCard _privateCard = ContactCard(
-  firstName: 'Jake',
-  lastName: 'Berg',
-  jobTitle: 'Fotografie',
-  company: 'Berg Bildwerk',
-  city: 'Stuttgart',
-  country: 'Deutschland',
-  mobile: '+49 170 9876543',
-  email: 'hallo@bergbildwerk.de',
-  website: 'bergbildwerk.de',
+  firstName: 'Alex',
+  lastName: 'Morgan',
+  jobTitle: 'Photography',
+  company: 'Morgan Studio',
+  city: 'Manchester',
+  country: 'United Kingdom',
+  mobile: '+44 7700 900123',
+  email: 'hello@morganstudio.co.uk',
+  website: 'morganstudio.co.uk',
 );
 
 final ProfileSet _twoProfiles = ProfileSet(
   profiles: const [
-    CardProfile(
-      id: 'demo',
-      name: 'Firma',
-      card: _demo,
-      style: CardStyle.marine,
-    ),
+    CardProfile(id: 'demo', name: 'Work', card: _demo, style: CardStyle.marine),
     CardProfile(
       id: 'privat',
-      name: 'Privat',
+      name: 'Personal',
       card: _privateCard,
       style: CardStyle.sand,
     ),
@@ -105,7 +100,7 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
-        locale: const Locale('de'),
+        locale: const Locale('en'),
         localizationsDelegates: const [
           AppLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
@@ -144,7 +139,7 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
-        locale: const Locale('de'),
+        locale: const Locale('en'),
         localizationsDelegates: const [
           AppLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
@@ -273,11 +268,12 @@ void main() {
   });
 }
 
-/// Rahmen mit deutscher Sprache fuer alle Vorschaubilder.
+/// Rahmen fuer alle Vorschaubilder. Die Oberflaeche wird auf Englisch
+/// gerendert, weil die Bilder in den Stores und in der README landen.
 Widget _app(Widget home) {
   return MaterialApp(
     debugShowCheckedModeBanner: false,
-    locale: const Locale('de'),
+    locale: const Locale('en'),
     localizationsDelegates: const [
       AppLocalizations.delegate,
       GlobalMaterialLocalizations.delegate,

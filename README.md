@@ -115,8 +115,12 @@ einem Git-Tag `v*` aus und zählen die Build-Nummer selbst hoch.
 
 Was drumherum einzurichten ist – Signaturschlüssel, Play-Dienstkonto,
 Apple-API-Key –, steht Schritt für Schritt in
-[`docs/veroeffentlichen.md`](docs/veroeffentlichen.md). Fertige Store-Texte,
-Icon und Feature-Grafik liegen in [`docs/store/`](docs/store/).
+[`docs/veroeffentlichen.md`](docs/veroeffentlichen.md).
+
+Die Store-Materialien in [`docs/store/`](docs/store/) sind auf **Englisch**:
+Texte innerhalb der Zeichengrenzen, Icon 512×512, Feature-Grafik 1024×500 und
+fünf Screenshots im Format 1080×1920 mit Bildunterschriften. Eine deutsche
+Übersetzung der Texte liegt für eine zweite Store-Sprache bereit.
 
 Grundlagen zu Codemagic selbst: [`docs/codemagic.md`](docs/codemagic.md).
 
@@ -180,6 +184,7 @@ Speichern/Laden), die Farben samt Kontrastprüfung, die Sprachauswahl sowie das
 Layout: Die Karte wird auf sieben Gerätegrößen gerendert und muss ohne Überlauf
 und ohne Scrollbereich auskommen – auch bei doppelter System-Schriftgröße.
 
+Die Screenshots zeigen die App auf Englisch – sie landen auch in den Stores.
 Der Bild-Generator für `docs/` liegt bewusst außerhalb von `test/`, damit
 `flutter test` ihn nicht mitläuft: Die Bilder hängen von den lokal
 installierten Schriften ab und würden auf einem anderen Rechner abweichen.
