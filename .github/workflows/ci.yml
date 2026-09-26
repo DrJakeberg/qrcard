@@ -7,6 +7,13 @@ on:
     tags: ['v*']
   pull_request:
   workflow_dispatch:
+    inputs:
+      release_version:
+        description: >-
+          Version fuer ein Release, z. B. 1.0.0 (leer lassen = nur bauen).
+          Der Tag wird dabei vom Runner angelegt.
+        required: false
+        default: ''
 
 env:
   # Auf die Version festgelegt, mit der die App entwickelt wurde.
@@ -70,8 +77,11 @@ jobs:
 
   release:
     name: Release mit APK veroeffentlichen
-    # Nur bei einem Versions-Tag, und erst wenn Tests und Build durch sind.
-    if: startsWith(github.ref, 'refs/tags/v')
+    # Bei einem Versions-Tag, oder wenn der Workflow von Hand mit einer Version
+    # gestartet wurde. Erst wenn Tests und beide Builds durch sind.
+    if: >-
+      startsWith(github.ref, 'refs/tags/v') ||
+      inputs.release_version != ''
     needs: [test, android, ios]
     runs-on: ubuntu-latest
     permissions:
@@ -79,6 +89,9 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Volle Historie, sonst laesst sich kein Tag setzen.
+          fetch-depth: 0
       - uses: actions/download-artifact@v4
         with:
           name: visitenkarte-android-apk
@@ -87,10 +100,31 @@ jobs:
         # Der Dateiname muss ueber Versionen hinweg gleich bleiben, sonst
         # funktioniert der Dauerlink auf die jeweils neueste Fassung nicht.
         run: mv apk/app-release.apk visitenkarte.apk
+      - name: Tag bestimmen und bei Bedarf anlegen
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ -n "${{ inputs.release_version }}" ]; then
+            # Von Hand gestartet: Der Runner legt den Tag selbst an. Sein Token
+            # darf das dank contents: write. Eine Identitaet hat er von Haus
+            # aus nicht, ohne die verweigert git das Anlegen.
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            TAG="v${{ inputs.release_version }}"
+            if git rev-parse "$TAG" >/dev/null 2>&1; then
+              echo "Tag $TAG existiert bereits."
+            else
+              git tag -a "$TAG" -m "Visitenkarte ${{ inputs.release_version }}"
+              git push origin "$TAG"
+            fi
+          else
+            # Vom Tag-Push ausgeloest.
+            TAG="${{ github.ref_name }}"
+          fi
+          echo "TAG=$TAG" >> "$GITHUB_ENV"
       - name: Release anlegen
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: ${{ github.ref_name }}
         run: |
           cat > notes.md <<'NOTES'
           ## Auf dem Telefon installieren
@@ -128,6 +162,5 @@ jobs:
           else
             gh release create "$TAG" visitenkarte.apk \
               --title "Visitenkarte $TAG" \
-              --notes-file notes.md \
-              --verify-tag
+              --notes-file notes.md
           fi
