@@ -111,6 +111,9 @@ Ein Versions-Tag erzeugt zusätzlich ein GitHub Release mit der APK als Anhang:
 git tag v1.0.0 && git push origin v1.0.0
 ```
 
+Ohne Kommandozeile geht es auch: **Actions → CI → Run workflow**, dort die
+Version eintragen (z. B. `1.0.0`) und starten. Den Tag legt dann der Runner an.
+
 Danach liegt sie unter einem **Dauerlink**, der immer auf die neueste Fassung
 zeigt:
 
