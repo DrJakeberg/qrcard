@@ -25,10 +25,13 @@ String buildVCard(ContactCard card) {
     lines.add('TEL;TYPE=CELL,VOICE:${_esc(card.mobile)}');
   }
   if (card.email.isNotEmpty) {
-    lines.add('EMAIL;TYPE=PREF,INTERNET:${_esc(card.email)}');
+    // Bewusst TYPE=WORK statt PREF/INTERNET: Scanner zeigen den TYPE als Label
+    // an, und "PREF" bzw. "INTERNET" sieht dort unschoen aus.
+    lines.add('EMAIL;TYPE=WORK:${_esc(card.email)}');
   }
-  if (card.website.isNotEmpty)
+  if (card.website.isNotEmpty) {
     lines.add('URL:${_esc(_withScheme(card.website))}');
+  }
 
   // ADR: Postfach;Zusatz;Strasse;Ort;Region;PLZ;Land
   final hasAddress = [

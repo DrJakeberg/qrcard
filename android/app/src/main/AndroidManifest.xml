@@ -1,4 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Fuer die Uebertragung per Antippen. Die App laeuft auch ohne NFC. -->
+    <uses-permission android:name="android.permission.NFC" />
+    <uses-feature
+        android:name="android.hardware.nfc.hce"
+        android:required="false" />
     <application
         android:label="Visitenkarte"
         android:name="${applicationName}"
@@ -30,6 +35,33 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+        <!-- Homescreen-Widget mit dem QR-Code der aktiven Karte -->
+        <receiver
+            android:name=".CardWidgetProvider"
+            android:label="@string/widget_name"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/card_widget_info" />
+        </receiver>
+
+        <!-- Gibt die Visitenkarte per NFC aus, wenn ein Geraet angetippt wird -->
+        <service
+            android:name=".CardApduService"
+            android:exported="true"
+            android:permission="android.permission.BIND_NFC_SERVICE">
+            <intent-filter>
+                <action android:name="android.nfc.cardemulation.action.HOST_APDU_SERVICE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <meta-data
+                android:name="android.nfc.cardemulation.host_apdu_service"
+                android:resource="@xml/apduservice" />
+        </service>
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

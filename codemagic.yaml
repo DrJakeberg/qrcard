@@ -1,0 +1,176 @@
+# Codemagic-Konfiguration fuer die Visitenkarten-App.
+#
+# ACHTUNG: Sobald diese Datei im Repository liegt, ignoriert Codemagic die im
+# Browser angeklickte Workflow-Konfiguration vollstaendig. Entweder-oder.
+#
+# Was vorher in Codemagic angelegt sein muss, steht in docs/veroeffentlichen.md.
+
+definitions:
+  flutter_version: &flutter_version 3.47.4
+
+  pruefen: &pruefen
+    name: Format, Analyse und Tests
+    script: |
+      dart format --output=none --set-exit-if-changed lib test tool
+      flutter analyze
+      flutter test
+
+workflows:
+  # ---------------------------------------------------------------------------
+  # 1) APK zum Selbstinstallieren - braucht keinen Store und keinen Account.
+  # ---------------------------------------------------------------------------
+  android-apk:
+    name: Android APK (zum Selbstinstallieren)
+    instance_type: linux_x2
+    max_build_duration: 45
+    environment:
+      flutter: *flutter_version
+      java: 17
+      # Optional: Wenn die Gruppe "android_keystore" existiert, wird mit dem
+      # eigenen Schluessel signiert. Sonst mit dem Debug-Schluessel - das
+      # reicht zum Selbstinstallieren.
+      groups:
+        - android_keystore
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+    scripts:
+      - name: Abhaengigkeiten holen
+        script: flutter pub get
+      - *pruefen
+      - name: APK bauen
+        script: flutter build apk --release
+    artifacts:
+      - build/**/outputs/**/*.apk
+    publishing:
+      email:
+        # Hier deine Adresse eintragen.
+        recipients:
+          - deine@mailadresse.de
+        notify:
+          success: true
+          failure: true
+
+  # ---------------------------------------------------------------------------
+  # 2) Google Play - laedt ein App Bundle in den internen Testkanal.
+  # ---------------------------------------------------------------------------
+  android-play:
+    name: Google Play (interner Test)
+    instance_type: linux_x2
+    max_build_duration: 60
+    environment:
+      flutter: *flutter_version
+      java: 17
+      android_signing:
+        # In Codemagic unter Code signing identities anlegen und so benennen.
+        - visitenkarte_keystore
+      groups:
+        # Muss GCLOUD_SERVICE_ACCOUNT_CREDENTIALS enthalten (Play-Dienstkonto).
+        - google_play
+      vars:
+        PACKAGE_NAME: de.cyb8.qrcode
+    triggering:
+      events:
+        - tag
+      tag_patterns:
+        - pattern: 'v*'
+          include: true
+    scripts:
+      - name: Abhaengigkeiten holen
+        script: flutter pub get
+      - *pruefen
+      - name: Naechste Versionsnummer bestimmen
+        script: |
+          # Play lehnt einen Upload ab, wenn die Versionsnummer schon vergeben
+          # ist. Deshalb die hoechste bisher hochgeladene holen und erhoehen.
+          LATEST=$(google-play get-latest-build-number \
+            --package-name "$PACKAGE_NAME" \
+            --tracks internal alpha beta production 2>/dev/null || echo 0)
+          echo "Hoechste bisherige Versionsnummer: $LATEST"
+          echo "BUILD_NUMBER=$(($LATEST + 1))" >> $CM_ENV
+      - name: App Bundle bauen
+        script: flutter build appbundle --release --build-number=$BUILD_NUMBER
+    artifacts:
+      - build/**/outputs/**/*.aab
+      - build/**/outputs/**/mapping.txt
+    publishing:
+      google_play:
+        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+        track: internal
+        # Auf false stellen, sobald du wirklich veroeffentlichen willst.
+        submit_as_draft: true
+      email:
+        recipients:
+          - deine@mailadresse.de
+        notify:
+          success: true
+          failure: true
+
+  # ---------------------------------------------------------------------------
+  # 3) Apple App Store - laedt nach TestFlight.
+  # ---------------------------------------------------------------------------
+  ios-appstore:
+    name: App Store (TestFlight)
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    integrations:
+      # Name des in Codemagic hinterlegten App-Store-Connect-Schluessels.
+      app_store_connect: visitenkarte_asc
+    environment:
+      flutter: *flutter_version
+      xcode: latest
+      cocoapods: default
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: de.cyb8.qrcode
+      vars:
+        BUNDLE_ID: de.cyb8.qrcode
+        # App-ID aus App Store Connect (die lange Zahl in der URL).
+        APP_STORE_APPLE_ID: 0000000000
+    triggering:
+      events:
+        - tag
+      tag_patterns:
+        - pattern: 'v*'
+          include: true
+    scripts:
+      - name: Abhaengigkeiten holen
+        script: flutter pub get
+      - *pruefen
+      - name: Naechste Buildnummer bestimmen
+        script: |
+          # Apple verlangt bei jedem Upload eine hoehere Buildnummer.
+          LATEST=$(app-store-connect get-latest-testflight-build-number \
+            "$APP_STORE_APPLE_ID" 2>/dev/null || echo 0)
+          echo "Hoechste bisherige Buildnummer: $LATEST"
+          echo "BUILD_NUMBER=$(($LATEST + 1))" >> $CM_ENV
+      - name: Signierprofile einrichten
+        script: |
+          keychain initialize
+          app-store-connect fetch-signing-files "$BUNDLE_ID" \
+            --type IOS_APP_STORE --create
+          keychain add-certificates
+          xcode-project use-profiles
+      - name: IPA bauen
+        script: |
+          flutter build ipa --release \
+            --build-number=$BUILD_NUMBER \
+            --export-options-plist=/Users/builder/export_options.plist
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        # Erst einschalten, wenn die App wirklich in den Store soll.
+        submit_to_app_store: false
+      email:
+        recipients:
+          - deine@mailadresse.de
+        notify:
+          success: true
+          failure: true

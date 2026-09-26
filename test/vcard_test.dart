@@ -44,6 +44,14 @@ void main() {
       );
     });
 
+    test('nutzt fuer die E-Mail ein sauberes Label', () {
+      final vcard = buildVCard(card);
+      expect(vcard, contains('EMAIL;TYPE=WORK:jake@muster.de'));
+      // PREF/INTERNET tauchen bei manchen Scannern als Label auf.
+      expect(vcard, isNot(contains('PREF')));
+      expect(vcard, isNot(contains('INTERNET')));
+    });
+
     test('unterscheidet Festnetz und Mobil', () {
       final vcard = buildVCard(card);
       expect(vcard, contains('TEL;TYPE=WORK,VOICE:+49 30 123456'));

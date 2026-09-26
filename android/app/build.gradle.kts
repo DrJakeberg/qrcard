@@ -1,11 +1,40 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+// Signierung fuer Release-Builds.
+//
+// Die Zugangsdaten kommen entweder aus android/key.properties (lokal) oder aus
+// Umgebungsvariablen (Codemagic). Beides fehlt? Dann wird mit dem
+// Debug-Schluessel signiert - das reicht zum Ausprobieren, wird vom Play Store
+// aber abgelehnt.
+//
+// Weder key.properties noch die Keystore-Datei gehoeren ins Repository;
+// android/.gitignore schliesst beide aus.
+val keystoreProperties = Properties()
+rootProject.file("key.properties").takeIf { it.exists() }?.inputStream()?.use {
+    keystoreProperties.load(it)
+}
+
+fun signingValue(fileKey: String, envKey: String): String? =
+    keystoreProperties.getProperty(fileKey) ?: System.getenv(envKey)
+
+val releaseStoreFile = signingValue("storeFile", "CM_KEYSTORE_PATH")
+val releaseStorePassword = signingValue("storePassword", "CM_KEYSTORE_PASSWORD")
+val releaseKeyAlias = signingValue("keyAlias", "CM_KEY_ALIAS")
+val releaseKeyPassword = signingValue("keyPassword", "CM_KEY_PASSWORD")
+
+val hasReleaseSigning = releaseStoreFile != null &&
+    releaseStorePassword != null &&
+    releaseKeyAlias != null &&
+    releaseKeyPassword != null
+
 android {
-    namespace = "de.jakeberg.qrcard"
+    namespace = "de.cyb8.qrcode"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -16,7 +45,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "de.jakeberg.qrcard"
+        applicationId = "de.cyb8.qrcode"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
@@ -29,11 +58,30 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        if (hasReleaseSigning) {
+            create("release") {
+                storeFile = file(releaseStoreFile!!)
+                storePassword = releaseStorePassword
+                keyAlias = releaseKeyAlias
+                keyPassword = releaseKeyPassword
+            }
+        }
+    }
+
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = if (hasReleaseSigning) {
+                signingConfigs.getByName("release")
+            } else {
+                // Ohne eigenen Schluessel laesst sich die App zwar bauen und
+                // seitlich installieren, aber nicht in den Play Store laden.
+                logger.lifecycle(
+                    "Kein Release-Keystore gefunden - es wird mit dem " +
+                        "Debug-Schluessel signiert.",
+                )
+                signingConfigs.getByName("debug")
+            }
         }
     }
 }

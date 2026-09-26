@@ -1,0 +1,90 @@
+{
+  "@@locale": "de",
+
+  "appTitle": "Visitenkarte",
+  "cancel": "Abbrechen",
+  "save": "Speichern",
+  "delete": "Löschen",
+  "done": "Fertig",
+  "reset": "Zurücksetzen",
+
+  "editCard": "Visitenkarte bearbeiten",
+  "scanHint": "Antippen zum Vergrößern",
+  "addContactData": "Kontaktdaten hinzufügen",
+  "copiedToClipboard": "{label} kopiert",
+  "@copiedToClipboard": {
+    "placeholders": { "label": { "type": "String" } }
+  },
+  "couldNotOpen": "Konnte nicht geöffnet werden.",
+
+  "labelAddress": "Adresse",
+  "labelPhone": "Telefon",
+  "labelMobile": "Mobil",
+  "labelEmail": "E-Mail",
+  "labelWeb": "Web",
+
+  "qrScreenTitle": "Zum Scannen",
+  "qrScreenHint": "Mit der Kamera scannen – der Kontakt kann direkt gespeichert werden.",
+
+  "sectionPerson": "Person",
+  "sectionCompany": "Firma",
+  "sectionContact": "Kontakt",
+  "fieldFirstName": "Vorname",
+  "fieldLastName": "Nachname",
+  "fieldJobTitle": "Position / Titel",
+  "hintJobTitle": "z. B. Geschäftsführer",
+  "fieldCompany": "Firmenname",
+  "fieldStreet": "Straße und Hausnummer",
+  "fieldPostalCode": "PLZ",
+  "fieldCity": "Ort",
+  "fieldCountry": "Land",
+  "fieldPhoneWork": "Telefon (Firma)",
+  "fieldMobile": "Mobil",
+  "fieldEmail": "E-Mail",
+  "fieldWebsite": "Website",
+  "hintWebsite": "z. B. firma.de",
+  "invalidEmail": "Bitte eine gültige E-Mail-Adresse eingeben",
+  "privacyNote": "Alle Angaben bleiben auf diesem Gerät. Die App sendet nichts an einen Server.",
+
+  "photoAdd": "Foto hinzufügen",
+  "photoChange": "Foto ändern",
+  "photoFromGallery": "Aus der Galerie wählen",
+  "photoFromCamera": "Foto aufnehmen",
+  "photoRemove": "Foto entfernen",
+  "photoError": "Foto konnte nicht geladen werden: {error}",
+  "@photoError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+
+  "profiles": "Profile",
+  "profileName": "Profilname",
+  "hintProfileName": "z. B. Firma oder Privat",
+  "newProfile": "Neues Profil",
+  "duplicateProfile": "Profil duplizieren",
+  "deleteProfile": "Profil löschen",
+  "deleteProfileQuestion": "Profil „{name}“ wirklich löschen?",
+  "@deleteProfileQuestion": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "lastProfileHint": "Das letzte Profil kann nicht gelöscht werden.",
+  "switchProfile": "Profil wechseln",
+  "untitledProfile": "Ohne Namen",
+
+  "appearance": "Darstellung",
+  "colorPresets": "Farbvorlagen",
+  "colorCustom": "Eigene Farbe",
+  "colorBackgroundTop": "Hintergrund oben",
+  "colorBackgroundBottom": "Hintergrund unten",
+  "colorText": "Schrift",
+  "colorAccent": "Akzent",
+  "contrastWarning": "Schrift und Hintergrund sind zu ähnlich – die Karte wird schwer lesbar.",
+  "qrStaysWhite": "Der QR-Code bleibt immer schwarz auf weiß, damit ihn jeder Scanner sicher liest.",
+  "preview": "Vorschau",
+
+  "presetMarine": "Marine",
+  "presetGraphite": "Graphit",
+  "presetBordeaux": "Bordeaux",
+  "presetForest": "Wald",
+  "presetSand": "Sand",
+  "presetPaper": "Papier"
+}

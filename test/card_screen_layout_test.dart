@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:qrcard/l10n/app_localizations.dart';
+import 'package:qrcard/l10n/locale_fallback.dart';
+import 'package:qrcard/models/card_profile.dart';
+import 'package:qrcard/models/card_style.dart';
 import 'package:qrcard/models/contact_card.dart';
 import 'package:qrcard/screens/card_screen.dart';
 import 'package:qrcard/services/card_storage.dart';
@@ -31,22 +36,38 @@ const Map<String, Size> _sizes = <String, Size>{
   'Querformat': Size(852, 393),
 };
 
+ProfileSet _setOf(ContactCard card, {CardStyle style = CardStyle.marine}) {
+  final profile = CardProfile(id: 'test', name: '', card: card, style: style);
+  return ProfileSet(profiles: [profile], activeId: profile.id);
+}
+
 Future<void> _pumpCard(
   WidgetTester tester,
   ContactCard card, {
   double textScale = 1.0,
+  CardStyle style = CardStyle.marine,
+  Locale locale = const Locale('de'),
 }) async {
   await tester.pumpWidget(
     MaterialApp(
+      locale: locale,
+      localeResolutionCallback: resolveLocale,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
       builder: (context, child) => MediaQuery(
         data: MediaQuery.of(context)
             .copyWith(textScaler: TextScaler.linear(textScale)),
         child: child!,
       ),
       home: CardScreen(
-        card: card,
+        profiles: _setOf(card, style: style),
         storage: CardStorage(),
-        onCardChanged: (_) {},
+        onProfilesChanged: (_) {},
       ),
     ),
   );
@@ -93,7 +114,7 @@ void main() {
 
     expect(tester.takeException(), isNull);
     expect(find.text('Jake Berg'), findsOneWidget);
-    expect(find.text('Kontaktdaten hinzufuegen'), findsOneWidget);
+    expect(find.text('Kontaktdaten hinzufügen'), findsOneWidget);
   });
 
   // Bei grosser System-Schrift darf die Karte ebenfalls nicht ueberlaufen.
@@ -124,5 +145,34 @@ void main() {
 
     expect(find.text('Zum Scannen'), findsOneWidget);
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('folgt der Sprache des Telefons', (tester) async {
+    tester.view.devicePixelRatio = 3.0;
+    tester.view.physicalSize = const Size(393, 852) * 3.0;
+    addTearDown(tester.view.reset);
+
+    await _pumpCard(tester, _fullCard, locale: const Locale('en'));
+    expect(find.text('Tap to enlarge'), findsOneWidget);
+
+    await _pumpCard(tester, _fullCard, locale: const Locale('de'));
+    expect(find.text('Antippen zum Vergrößern'), findsOneWidget);
+
+    // Eine nicht uebersetzte Sprache faellt auf Englisch zurueck.
+    await _pumpCard(tester, _fullCard, locale: const Locale('fr'));
+    expect(find.text('Tap to enlarge'), findsOneWidget);
+  });
+
+  testWidgets('helle Kartenfarben bleiben ohne Overflow lesbar', (
+    tester,
+  ) async {
+    tester.view.devicePixelRatio = 3.0;
+    tester.view.physicalSize = const Size(393, 852) * 3.0;
+    addTearDown(tester.view.reset);
+
+    await _pumpCard(tester, _fullCard, style: CardStyle.paper);
+
+    expect(tester.takeException(), isNull);
+    expect(find.byType(Scrollable), findsNothing);
   });
 }

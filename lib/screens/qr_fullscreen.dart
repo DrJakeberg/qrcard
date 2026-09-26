@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../models/contact_card.dart';
 import '../services/vcard.dart';
 import '../widgets/qr_panel.dart';
@@ -21,7 +22,7 @@ class QrFullscreenScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         foregroundColor: Colors.black87,
-        title: const Text('Zum Scannen'),
+        title: Text(AppLocalizations.of(context).qrScreenTitle),
       ),
       body: SafeArea(
         child: LayoutBuilder(
@@ -39,7 +40,9 @@ class QrFullscreenScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 32),
                   child: Text(
-                    card.fullName.isEmpty ? 'Visitenkarte' : card.fullName,
+                    card.fullName.isEmpty
+                        ? AppLocalizations.of(context).appTitle
+                        : card.fullName,
                     textAlign: TextAlign.center,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -51,13 +54,12 @@ class QrFullscreenScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 6),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 32),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 32),
                   child: Text(
-                    'Mit der Kamera scannen - der Kontakt kann direkt '
-                    'gespeichert werden.',
+                    AppLocalizations.of(context).qrScreenHint,
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.black54, fontSize: 13),
+                    style: const TextStyle(color: Colors.black54, fontSize: 13),
                   ),
                 ),
               ],

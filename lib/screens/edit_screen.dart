@@ -3,16 +3,20 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../l10n/app_localizations.dart';
+import '../models/card_profile.dart';
+import '../models/card_style.dart';
 import '../models/contact_card.dart';
 import '../services/card_storage.dart';
+import 'style_editor.dart';
 
-/// Eingabemaske fuer die Visitenkarte.
+/// Eingabemaske fuer eine Visitenkarte.
 ///
-/// Gibt die geaenderte Karte beim Speichern via [Navigator.pop] zurueck.
+/// Gibt das geaenderte Profil beim Speichern via [Navigator.pop] zurueck.
 class EditScreen extends StatefulWidget {
-  const EditScreen({required this.card, required this.storage, super.key});
+  const EditScreen({required this.profile, required this.storage, super.key});
 
-  final ContactCard card;
+  final CardProfile profile;
   final CardStorage storage;
 
   @override
@@ -24,14 +28,16 @@ class _EditScreenState extends State<EditScreen> {
   final _picker = ImagePicker();
 
   late final Map<String, TextEditingController> _controllers;
+  late CardStyle _style = widget.profile.style;
   String? _photoPath;
   bool _busy = false;
 
   @override
   void initState() {
     super.initState();
-    final card = widget.card;
+    final card = widget.profile.card;
     _controllers = {
+      'profileName': TextEditingController(text: widget.profile.name),
       'firstName': TextEditingController(text: card.firstName),
       'lastName': TextEditingController(text: card.lastName),
       'jobTitle': TextEditingController(text: card.jobTitle),
@@ -59,6 +65,8 @@ class _EditScreenState extends State<EditScreen> {
   String _value(String key) => _controllers[key]!.text.trim();
 
   Future<void> _pickPhoto(ImageSource source) async {
+    final l10n = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
     try {
       final picked = await _picker.pickImage(
         source: source,
@@ -74,19 +82,20 @@ class _EditScreenState extends State<EditScreen> {
       setState(() => _photoPath = stored);
     } on Exception catch (error) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Foto konnte nicht geladen werden: $error')),
+      messenger.showSnackBar(
+        SnackBar(content: Text(l10n.photoError(error.toString()))),
       );
     }
   }
 
-  Future<void> _removePhoto() async {
-    await widget.storage.deletePhoto(_photoPath);
-    if (!mounted) return;
+  void _removePhoto() {
+    // Die Datei selbst wird erst beim Speichern aufgeraeumt - so bleibt ein
+    // Abbrechen folgenlos, und andere Profile behalten ihr Bild.
     setState(() => _photoPath = null);
   }
 
   void _showPhotoOptions() {
+    final l10n = AppLocalizations.of(context);
     showModalBottomSheet<void>(
       context: context,
       builder: (sheetContext) => SafeArea(
@@ -95,7 +104,7 @@ class _EditScreenState extends State<EditScreen> {
           children: [
             ListTile(
               leading: const Icon(Icons.photo_library_outlined),
-              title: const Text('Aus der Galerie waehlen'),
+              title: Text(l10n.photoFromGallery),
               onTap: () {
                 Navigator.of(sheetContext).pop();
                 _pickPhoto(ImageSource.gallery);
@@ -103,7 +112,7 @@ class _EditScreenState extends State<EditScreen> {
             ),
             ListTile(
               leading: const Icon(Icons.photo_camera_outlined),
-              title: const Text('Foto aufnehmen'),
+              title: Text(l10n.photoFromCamera),
               onTap: () {
                 Navigator.of(sheetContext).pop();
                 _pickPhoto(ImageSource.camera);
@@ -112,7 +121,7 @@ class _EditScreenState extends State<EditScreen> {
             if (_photoPath != null)
               ListTile(
                 leading: const Icon(Icons.delete_outline),
-                title: const Text('Foto entfernen'),
+                title: Text(l10n.photoRemove),
                 onTap: () {
                   Navigator.of(sheetContext).pop();
                   _removePhoto();
@@ -124,41 +133,50 @@ class _EditScreenState extends State<EditScreen> {
     );
   }
 
-  Future<void> _save() async {
+  Future<void> _openStyleEditor() async {
+    final result = await Navigator.of(context).push<CardStyle>(
+      MaterialPageRoute<CardStyle>(
+        builder: (_) => StyleEditorScreen(style: _style),
+      ),
+    );
+    if (result != null) setState(() => _style = result);
+  }
+
+  void _save() {
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _busy = true);
-    final card = ContactCard(
-      firstName: _value('firstName'),
-      lastName: _value('lastName'),
-      jobTitle: _value('jobTitle'),
-      company: _value('company'),
-      street: _value('street'),
-      postalCode: _value('postalCode'),
-      city: _value('city'),
-      country: _value('country'),
-      phone: _value('phone'),
-      mobile: _value('mobile'),
-      email: _value('email'),
-      website: _value('website'),
-      photoPath: _photoPath,
+    final profile = widget.profile.copyWith(
+      name: _value('profileName'),
+      style: _style,
+      card: ContactCard(
+        firstName: _value('firstName'),
+        lastName: _value('lastName'),
+        jobTitle: _value('jobTitle'),
+        company: _value('company'),
+        street: _value('street'),
+        postalCode: _value('postalCode'),
+        city: _value('city'),
+        country: _value('country'),
+        phone: _value('phone'),
+        mobile: _value('mobile'),
+        email: _value('email'),
+        website: _value('website'),
+        photoPath: _photoPath,
+      ),
     );
-    await widget.storage.save(card);
-
-    if (!mounted) return;
-    Navigator.of(context).pop(card);
+    Navigator.of(context).pop(profile);
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Visitenkarte bearbeiten'),
+        title: Text(l10n.editCard),
         actions: [
-          TextButton(
-            onPressed: _busy ? null : _save,
-            child: const Text('Speichern'),
-          ),
+          TextButton(onPressed: _busy ? null : _save, child: Text(l10n.save)),
         ],
       ),
       body: Form(
@@ -170,33 +188,40 @@ class _EditScreenState extends State<EditScreen> {
               child: _PhotoPicker(path: _photoPath, onTap: _showPhotoOptions),
             ),
             const SizedBox(height: 24),
-            const _SectionTitle('Person'),
+            _field('profileName', l10n.profileName, hint: l10n.hintProfileName),
+            _StyleTile(
+              style: _style,
+              label: l10n.appearance,
+              onTap: _openStyleEditor,
+            ),
+            const SizedBox(height: 20),
+            _SectionTitle(l10n.sectionPerson),
             _field(
               'firstName',
-              'Vorname',
+              l10n.fieldFirstName,
               textCapitalization: TextCapitalization.words,
             ),
             _field(
               'lastName',
-              'Nachname',
+              l10n.fieldLastName,
               textCapitalization: TextCapitalization.words,
             ),
             _field(
               'jobTitle',
-              'Position / Titel',
-              hint: 'z. B. Geschaeftsfuehrer',
+              l10n.fieldJobTitle,
+              hint: l10n.hintJobTitle,
               textCapitalization: TextCapitalization.sentences,
             ),
             const SizedBox(height: 16),
-            const _SectionTitle('Firma'),
+            _SectionTitle(l10n.sectionCompany),
             _field(
               'company',
-              'Firmenname',
+              l10n.fieldCompany,
               textCapitalization: TextCapitalization.words,
             ),
             _field(
               'street',
-              'Strasse und Hausnummer',
+              l10n.fieldStreet,
               textCapitalization: TextCapitalization.words,
             ),
             Row(
@@ -206,7 +231,7 @@ class _EditScreenState extends State<EditScreen> {
                   width: 120,
                   child: _field(
                     'postalCode',
-                    'PLZ',
+                    l10n.fieldPostalCode,
                     keyboardType: TextInputType.number,
                   ),
                 ),
@@ -214,7 +239,7 @@ class _EditScreenState extends State<EditScreen> {
                 Expanded(
                   child: _field(
                     'city',
-                    'Ort',
+                    l10n.fieldCity,
                     textCapitalization: TextCapitalization.words,
                   ),
                 ),
@@ -222,39 +247,42 @@ class _EditScreenState extends State<EditScreen> {
             ),
             _field(
               'country',
-              'Land',
+              l10n.fieldCountry,
               textCapitalization: TextCapitalization.words,
             ),
             const SizedBox(height: 16),
-            const _SectionTitle('Kontakt'),
+            _SectionTitle(l10n.sectionContact),
             _field(
               'phone',
-              'Telefon (Firma)',
+              l10n.fieldPhoneWork,
               keyboardType: TextInputType.phone,
             ),
-            _field('mobile', 'Mobil', keyboardType: TextInputType.phone),
+            _field(
+              'mobile',
+              l10n.fieldMobile,
+              keyboardType: TextInputType.phone,
+            ),
             _field(
               'email',
-              'E-Mail',
+              l10n.fieldEmail,
               keyboardType: TextInputType.emailAddress,
-              validator: _validateEmail,
+              validator: (value) => _validateEmail(value, l10n),
             ),
             _field(
               'website',
-              'Website',
-              hint: 'z. B. firma.de',
+              l10n.fieldWebsite,
+              hint: l10n.hintWebsite,
               keyboardType: TextInputType.url,
             ),
             const SizedBox(height: 28),
             FilledButton.icon(
               onPressed: _busy ? null : _save,
               icon: const Icon(Icons.check),
-              label: const Text('Speichern'),
+              label: Text(l10n.save),
             ),
             const SizedBox(height: 16),
             Text(
-              'Alle Angaben bleiben auf diesem Geraet. Die App sendet nichts '
-              'an einen Server.',
+              l10n.privacyNote,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodySmall,
             ),
@@ -291,11 +319,51 @@ class _EditScreenState extends State<EditScreen> {
     );
   }
 
-  String? _validateEmail(String? value) {
+  String? _validateEmail(String? value, AppLocalizations l10n) {
     final text = value?.trim() ?? '';
     if (text.isEmpty) return null;
     final valid = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(text);
-    return valid ? null : 'Bitte eine gueltige E-Mail-Adresse eingeben';
+    return valid ? null : l10n.invalidEmail;
+  }
+}
+
+/// Zeile, die die aktuellen Kartenfarben zeigt und den Farbeditor oeffnet.
+class _StyleTile extends StatelessWidget {
+  const _StyleTile({
+    required this.style,
+    required this.label,
+    required this.onTap,
+  });
+
+  final CardStyle style;
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      leading: Container(
+        width: 44,
+        height: 44,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [style.backgroundTop, style.backgroundBottom],
+          ),
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          'Aa',
+          style: TextStyle(color: style.text, fontWeight: FontWeight.w600),
+        ),
+      ),
+      title: Text(label),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: onTap,
+    );
   }
 }
 
@@ -307,6 +375,7 @@ class _PhotoPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final scheme = Theme.of(context).colorScheme;
     final hasPhoto = path != null && File(path!).existsSync();
 
@@ -342,7 +411,7 @@ class _PhotoPicker extends StatelessWidget {
         const SizedBox(height: 8),
         TextButton(
           onPressed: onTap,
-          child: Text(hasPhoto ? 'Foto aendern' : 'Foto hinzufuegen'),
+          child: Text(hasPhoto ? l10n.photoChange : l10n.photoAdd),
         ),
       ],
     );
