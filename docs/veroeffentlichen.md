@@ -165,6 +165,10 @@ Impressumspflicht besteht, musst du selbst klären.)
 
 **Eine neue Version veröffentlichen:**
 
+Derselbe Tag löst auch den Release-Job in GitHub Actions aus, der die APK unter
+`https://github.com/DrJakeberg/qrcard/releases/latest/download/visitenkarte.apk`
+zum direkten Download bereitstellt.
+
 ```bash
 # Versionsnummer in pubspec.yaml anpassen, z. B. auf 1.1.0+1
 git commit -am "Version 1.1.0"

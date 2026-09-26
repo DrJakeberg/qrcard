@@ -103,6 +103,26 @@ Die fertige APK holst du unter **Actions → der jeweilige Lauf → Artifacts �
 `visitenkarte-android-apk`**. Damit brauchst du für Android keine lokale
 Entwicklungsumgebung. Für öffentliche Repositories sind die Runner kostenlos.
 
+### APK zum Antippen
+
+Ein Versions-Tag erzeugt zusätzlich ein GitHub Release mit der APK als Anhang:
+
+```bash
+git tag v1.0.0 && git push origin v1.0.0
+```
+
+Danach liegt sie unter einem **Dauerlink**, der immer auf die neueste Fassung
+zeigt:
+
+```
+https://github.com/DrJakeberg/qrcard/releases/latest/download/visitenkarte.apk
+```
+
+Den auf dem Telefon öffnen, antippen, installieren — kein Login, kein ZIP,
+kein Entpacken. Als Lesezeichen speichern lohnt sich.
+
+Derselbe Tag löst auch die beiden Store-Workflows in Codemagic aus.
+
 Eine direkt installierbare `.ipa` kann der Runner nicht erzeugen – dafür
 müssten Apple-Zertifikat und Provisioning-Profil hinterlegt sein.
 
