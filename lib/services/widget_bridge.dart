@@ -16,16 +16,36 @@ import 'vcard.dart';
 /// hier als PNG gerendert und abgelegt; das Widget zeigt nur noch dieses Bild.
 /// Erzeugt wird es genau dann, wenn sich die Karte aendert - das reicht, denn
 /// oefter aendert sie sich nicht.
+///
+/// Das iOS-Widget braucht das PNG nicht: Es erzeugt den Code aus [keyVCard]
+/// selbst mit CoreImage und bleibt so in jeder Widget-Groesse scharf. Beide
+/// Seiten lesen dieselben Schluessel - was hier umbenannt wird, muss auch in
+/// CardWidgetProvider.kt und CardWidget.swift nachgezogen werden.
 class WidgetBridge {
   /// Muss zum Namen der Kotlin-Klasse passen (AndroidManifest.xml).
   static const String androidProviderName = 'CardWidgetProvider';
+
+  /// Muss zum `kind` in ios/widget/CardWidget.swift passen.
+  static const String iosWidgetName = 'CardWidget';
+
+  /// Gemeinsamer Datentopf von App und iOS-Widget. Zwei getrennte Programme
+  /// mit getrennten Sandboxes kommen nur ueber eine App Group aneinander.
+  /// Auf Android ist der Aufruf wirkungslos.
+  static const String iosAppGroupId = 'group.de.cyb8.qrcode';
 
   /// Schluessel, unter denen das Widget die Daten erwartet.
   static const String keyImagePath = 'card_qr_path';
   static const String keyName = 'card_name';
   static const String keySubtitle = 'card_subtitle';
 
-  /// Rohtext der vCard - den liest der NFC-Dienst beim Antippen aus.
+  /// Farben der aktiven Karte als "#RRGGBB" - damit das iOS-Widget zur Karte
+  /// passt, statt immer gleich auszusehen.
+  static const String keyBackgroundTop = 'card_bg_top';
+  static const String keyBackgroundBottom = 'card_bg_bottom';
+  static const String keyForeground = 'card_fg';
+
+  /// Rohtext der vCard - den liest der NFC-Dienst beim Antippen aus, und auf
+  /// iOS erzeugt das Widget daraus selbst seinen QR-Code.
   static const String keyVCard = 'card_vcard';
 
   static const String _fileName = 'widget_qr.png';
@@ -40,6 +60,10 @@ class WidgetBridge {
   /// niemals das Speichern der Visitenkarte verhindern.
   static Future<void> update(CardProfile profile) async {
     try {
+      // Muss vor dem Schreiben stehen: Erst damit landen die Daten auf iOS in
+      // der geteilten App Group statt im Sandkasten der App.
+      await HomeWidget.setAppGroupId(iosAppGroupId);
+
       final vCard = buildVCard(profile.card);
       final path = await renderQrToFile(vCard);
 
@@ -53,10 +77,34 @@ class WidgetBridge {
           profile.card.company,
         ].where((part) => part.isNotEmpty).join(' · '),
       );
-      await HomeWidget.updateWidget(name: androidProviderName);
+      await HomeWidget.saveWidgetData<String>(
+        keyBackgroundTop,
+        hexOf(profile.style.backgroundTop),
+      );
+      await HomeWidget.saveWidgetData<String>(
+        keyBackgroundBottom,
+        hexOf(profile.style.backgroundBottom),
+      );
+      await HomeWidget.saveWidgetData<String>(
+        keyForeground,
+        hexOf(profile.style.text),
+      );
+      await HomeWidget.updateWidget(
+        name: androidProviderName,
+        iOSName: iosWidgetName,
+      );
     } on Object catch (error, stack) {
       debugPrint('Widget konnte nicht aktualisiert werden: $error\n$stack');
     }
+  }
+
+  /// Schreibt eine Farbe als "#RRGGBB".
+  ///
+  /// Die Transparenz faellt weg: Ein Widget liegt auf dem Hintergrundbild des
+  /// Nutzers, da ist eine halbdurchsichtige Flaeche nicht vorhersehbar.
+  static String hexOf(Color color) {
+    final rgb = color.toARGB32() & 0xFFFFFF;
+    return '#${rgb.toRadixString(16).padLeft(6, '0').toUpperCase()}';
   }
 
   /// Rendert den QR-Code als PNG und legt ihn im App-Verzeichnis ab.

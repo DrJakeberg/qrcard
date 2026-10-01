@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Englisch ist die Standardsprache: Diese Texte sieht jedes Telefon, dessen
+  Sprache nicht in einem values-xx-Ordner steht. Deutsch liegt in values-de.
+-->
 <resources>
-    <string name="widget_name">Visitenkarte</string>
-    <string name="widget_description">Zeigt den QR-Code deiner Visitenkarte zum Abscannen.</string>
-    <string name="widget_qr_description">QR-Code der Visitenkarte</string>
-    <string name="widget_empty_title">Visitenkarte einrichten</string>
-    <string name="nfc_service_description">Visitenkarte per NFC übertragen</string>
+    <string name="widget_name">Business card</string>
+    <string name="widget_description">Shows the QR code of your business card, ready to scan.</string>
+    <string name="widget_qr_description">Business card QR code</string>
+    <string name="widget_empty_title">Set up your card</string>
+    <string name="nfc_service_description">Share business card via NFC</string>
 </resources>
