@@ -1,8 +1,9 @@
 # Homescreen-Widget und NFC
 
 Zwei Wege, die Visitenkarte weiterzugeben, ohne die App zu öffnen. Beide sind
-**auf Android umgesetzt**. Bei iOS gibt es harte Plattformgrenzen – die stehen
-unten ehrlich beschrieben.
+**auf Android umgesetzt**. Für das iPhone-Widget liegt der Code fertig bereit
+und braucht noch ein paar Schritte in Xcode; NFC als Sender geht auf iOS
+grundsätzlich nicht. Beides steht unten ehrlich beschrieben.
 
 ---
 
@@ -29,20 +30,26 @@ Bausteine wie Bild und Text. Deshalb:
 Das Bild wird nur erzeugt, wenn sich die Karte ändert – öfter ist es nicht
 nötig. Das Widget zeigt immer das **aktive** Profil.
 
-### iOS
+---
 
-iOS-Widgets brauchen eine eigene **WidgetKit-Extension**, also ein zusätzliches
-Ziel im Xcode-Projekt. Das lässt sich nicht durch Bearbeiten von Textdateien
-zuverlässig anlegen, sondern nur in Xcode selbst:
+## Homescreen-Widget (iOS)
 
-1. `ios/Runner.xcworkspace` in Xcode öffnen
-2. *File → New → Target… → Widget Extension*
-3. In der Extension das Bild aus einer geteilten App-Group lesen; dafür in der
-   App `HomeWidget.setAppGroupId(...)` aufrufen und dieselbe App-Group in
-   beiden Zielen aktivieren.
+iOS-Widgets brauchen eine eigene **WidgetKit-Extension**: ein zusätzliches
+Programm neben der App, mit eigener Bundle-ID und eigener Sandbox. Flutter
+kann darin nicht laufen, der Inhalt ist SwiftUI.
 
-Das Paket `home_widget` ist bereits eingebunden und unterstützt genau diesen
-Aufbau – es fehlt nur der Xcode-Schritt.
+Der komplette Code dafür liegt in
+[`ios/widget/CardWidget.swift`](../ios/widget/CardWidget.swift), die Dart-Seite
+ist angepasst. Was fehlt, ist das Anlegen des Ziels im Xcode-Projekt – das
+geht nur auf einem Mac, dauert aber keine Viertelstunde.
+
+**→ Schritt für Schritt: [`docs/ios-widget.md`](ios-widget.md)**
+
+Ein Unterschied zu Android ist bewusst gewählt: Das iOS-Widget bekommt **kein
+fertiges PNG**, sondern erzeugt den QR-Code aus dem vCard-Text selbst
+(CoreImage, Fehlerkorrektur M – dieselbe Stufe wie in der App). So muss keine
+Datei zwischen zwei Sandboxes wandern, und der Code bleibt in jeder
+Widget-Größe scharf. Die Farben des aktiven Profils übernimmt es mit.
 
 ---
 
@@ -97,3 +104,10 @@ Entwicklungsumgebung gab es kein Android-Gerät mit NFC. Geprüft ist:
 Was ein Gerätetest noch zeigen müsste: ob das Widget in der Widget-Liste
 auftaucht und sich aktualisiert, und ob die NFC-Übertragung mit einem echten
 Gegengerät funktioniert.
+
+Der Swift-Code des iOS-Widgets ist **nie kompiliert worden** – es gab keinen
+Mac und keine Apple-SDKs. Geprüft sind seine Syntax (mit einem Swift-Parser),
+die Schlüsselnamen gegen die Dart-Seite (`test/widget_bridge_test.dart`) und
+die Idee, den Code aus dem vCard-Text neu zu erzeugen (unabhängig kodiert und
+wieder dekodiert, Ergebnis identisch). Nicht geprüft sind die Aufrufe der
+Apple-Bibliotheken selbst.

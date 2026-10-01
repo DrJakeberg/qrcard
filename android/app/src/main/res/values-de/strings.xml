@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_name">Visitenkarte</string>
+    <string name="widget_description">Zeigt den QR-Code deiner Visitenkarte zum Abscannen.</string>
+    <string name="widget_qr_description">QR-Code der Visitenkarte</string>
+    <string name="widget_empty_title">Visitenkarte einrichten</string>
+    <string name="nfc_service_description">Visitenkarte per NFC übertragen</string>
+</resources>

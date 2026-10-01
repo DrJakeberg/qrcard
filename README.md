@@ -40,7 +40,10 @@ Alles bleibt auf dem Gerät. Kein Server, kein Account, keine Netzwerkberechtigu
   damit das Gegenüber ihn auch über den Tisch hinweg scannen kann.
 - **Tippen und Halten** – ein Tipp auf Telefon/E-Mail/Web startet Anruf, Mail
   oder Browser, langes Drücken kopiert den Wert in die Zwischenablage.
-- **Homescreen-Widget (Android)** – der QR-Code direkt auf dem Startbildschirm.
+- **Homescreen-Widget** – der QR-Code direkt auf dem Startbildschirm. Auf
+  Android fertig eingebaut; für das iPhone liegt der Code bereit und braucht
+  noch ein paar Schritte in Xcode
+  ([Anleitung](docs/ios-widget.md)).
 - **Übertragung per Antippen (Android)** – das Telefon gibt sich als NFC-Tag
   aus, ein anderes Gerät liest die Karte ohne Scannen.
 
@@ -177,6 +180,7 @@ lib/
     qr_fullscreen.dart          QR-Code formatfüllend
   widgets/qr_panel.dart         QR-Code auf weißem Grund
 android/app/src/main/kotlin/…   Widget-Anbieter und NFC-Dienst (Kotlin)
+ios/widget/CardWidget.swift     Homescreen-Widget für iOS (SwiftUI)
 assets/icon/                    Quellgrafik für das App-Icon
 tool/                           Erzeugt die Screenshots in docs/
 ```
